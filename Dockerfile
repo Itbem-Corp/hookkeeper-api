@@ -1,15 +1,23 @@
+FROM golang:1.22-alpine AS builder
+
+WORKDIR /src
+
+RUN apk add --no-cache ca-certificates
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /out/hookkeeper-api .
+
 FROM alpine:3.19
 
 WORKDIR /app
 
-# Install ca-certificates for HTTPS
 RUN apk add --no-cache ca-certificates
 
-# Copy binary
-COPY hookkeeper-api /app/hookkeeper-api
+COPY --from=builder /out/hookkeeper-api /app/hookkeeper-api
 
-# Expose port
 EXPOSE 8080
 
-# Run
 CMD ["/app/hookkeeper-api"]
