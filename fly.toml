@@ -1,20 +1,26 @@
-app = "hookkeeper-api"
-primary_region = "ord"
+# fly.toml app configuration file generated for hookkeeper-api on 2026-04-25T00:32:18Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'hookkeeper-api'
+primary_region = 'ord'
 
 [build]
 
 [deploy]
-  release_command = ""
 
 [env]
-  PORT = "8080"
+  PORT = '8080'
+  # REDIS_URL is expected at runtime and should be provided as a Fly secret.
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_exit = false
 
 [[vm]]
-  memory = "256mb"
-  cpu_kind = "shared"
-  size = "sv1"
+  size = 'shared-cpu-1x'
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 256
